@@ -2,14 +2,28 @@
 
 import { redirect } from 'next/navigation';
 import { createCheckoutSession, createCustomerPortalSession } from './stripe';
-import { withTeam } from '@/lib/auth/middleware';
+import { createClient } from '@/lib/server';
 
-export const checkoutAction = withTeam(async (formData, team) => {
+export const checkoutAction = async (formData: FormData) => {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
   const priceId = formData.get('priceId') as string;
-  await createCheckoutSession({ team: team, priceId });
-});
+  await createCheckoutSession({ userId: user.id, priceId });
+};
 
-export const customerPortalAction = withTeam(async (_, team) => {
-  const portalSession = await createCustomerPortalSession(team);
-  redirect(portalSession.url);
-});
+export const customerPortalAction = async () => {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    redirect('/auth/login');
+  }
+
+  // Since createCustomerPortalSession now redirects directly, we don't need to handle the return value
+  await createCustomerPortalSession({ userId: user.id });
+};
