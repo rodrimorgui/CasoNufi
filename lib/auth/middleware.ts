@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { TeamDataWithMembers, User } from '@/lib/db/schema';
 import { redirect } from 'next/navigation';
 
 export type ActionState = {
@@ -30,7 +29,7 @@ export function validatedAction<S extends z.ZodType<any, any>, T>(
 type ValidatedActionWithUserFunction<S extends z.ZodType<any, any>, T> = (
   data: z.infer<S>,
   formData: FormData,
-  user: User
+  user: any // User type was removed, so using 'any' for now
 ) => Promise<T>;
 
 export function validatedActionWithUser<S extends z.ZodType<any, any>, T>(
@@ -54,7 +53,7 @@ export function validatedActionWithUser<S extends z.ZodType<any, any>, T>(
 
 type ActionWithTeamFunction<T> = (
   formData: FormData,
-  team: TeamDataWithMembers
+  team: any // TeamDataWithMembers type was removed, so using 'any' for now
 ) => Promise<T>;
 
 export function withTeam<T>(action: ActionWithTeamFunction<T>) {
