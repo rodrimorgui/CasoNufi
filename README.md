@@ -29,6 +29,6 @@ Aplicación web SaaS básica que integra autenticación, pagos con Stripe y noti
 ### Instalación
 
 ```bash
-git clone https://github.com/tu-usuario/saas-starter.git
-cd saas-starter
+git clone https://github.com/rodrimorgui/CasoNufi.git 
+cd CasoNufi
 pnpm install
